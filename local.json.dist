@@ -1,0 +1,11 @@
+{
+    "service" : {"xively or local"},
+    "xively": {
+        "url": "",
+        "api_key": ""
+    },
+    "local": {
+        "url": "",
+        "api_key": ""
+    }
+}
