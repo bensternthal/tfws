@@ -1,55 +1,110 @@
 'use strict';
 
 var conf = require('./lib/conf');
-var service = conf.get('service');
-var interval = conf.get(service + ":interval");
 var tfws = require('./lib/tfws');
-var endpoint;
+var tfdata = require('./lib/tfdata');
+var Hapi = require('hapi');
+var SocketIO = require('socket.io');
+var global_socket;
+
+var server = new Hapi.Server();
+
 require('log-timestamp');
 
-/*  TODO - make this just dependent on the require of the library.
-    Depending on service defined in conf we do different things
-*/
 
-switch(service) {
-  case "xively":
-    endpoint = require('./services/xively');
-    break;
-  case "local":
-    endpoint = require('./services/xively');
-    break;
-  default:
-    errorHandler("No Or Invalid Service Defined");
-    break;
+/** Web Server **/
+if (!conf.get('port')) {
+  console.error('\n\'port\' is a required local.json field');
+  console.error('If you don\'t have a local.json file set up, please copy local.json-dist and fill in your config info before trying again\n');
+  process.exit(1);
 }
 
-/* Start Weather Station */
-tfws.start();
-
-/* Allow Enter Key To Stop Process*/
-process.stdin.on('data', function(data) {
-  tfws.stop();
+server.connection({
+  host: conf.get('domain'),
+  port: conf.get('port')
 });
 
-/* Allow 5 Seconds For Weather Station To Start */
-setTimeout(tfwsLoop,5000);
+server.views({
+  engines: {
+    jade: require('jade')
+  },
+  isCached: process.env.node === 'production',
+  path: __dirname + '/views',
+  compileOptions: {
+    pretty: true
+  }
+});
+
+server.route({
+  method: 'GET',
+  path: '/',
+  handler: function (request, reply) {
+      reply.view('index');
+  }
+});
+
+server.route({
+  path: '/{p*}',
+  method: 'GET',
+  handler: {
+    directory: {
+      path: './public',
+      listing: false,
+      index: false
+    }
+  }
+});
+
+server.start(function () {
+    console.log('Server running at:', server.info.uri);
+
+    var io = SocketIO.listen(server.listener);
+
+    // Store refernce to io to use elsewhere, I suspect I am
+    // doing this wrong.
+    global_socket = io;
+    io.on('connection', function(socket){
+      console.log('a user connected');
+    });
 
 
-/* Update According To Interval In Settings */
+    // Weather Station Stuff
+    tfws.start();
+    process.stdin.on('data', function(data) {
+      tfws.stop();
+    });
+
+    // Delay 5 Seconds For Weather Station To Start
+    setTimeout(function() {
+       tfwsLoop();
+    }
+    , 1000);
+
+    //fdata.getTfData();
+
+});
+
+
+// Update loop
 function tfwsLoop() {
   var json = tfws.gettfwsJSON();
+  global_socket.sockets.emit('tfdata', json);
+  console.log('here');
+  setTimeout(tfwsLoop, conf.get('interval'));
 
-  /* All services need an update command */
-  endpoint.update(json, function(error) {
-    if (error) {
-      errorHandler(error);
-    } else {
-      console.log(service + 'Updated');
-      setTimeout(tfwsLoop, interval);
-    }
-  });
+  // var json = tfws.gettfwsJSON();
+
+  // tfdata.saveTfData(json, function(error) {
+  //   if (error) {
+  //     errorHandler(error);
+  //   } else {
+  //     console.log('DB Updated');
+  //     setTimeout(tfwsLoop, conf.get('interval'));
+  //   }
+  // });
 }
 
+/** /Weather Station **/
 
 function errorHandler(error) {
   console.error('Error: ' + error);
