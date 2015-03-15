@@ -2,7 +2,7 @@
 
 var conf = require('./lib/conf');
 var tfws = require('./lib/tfws');
-var tfdata = require('./lib/tfdata');
+//var tfdata = require('./lib/tfdata');
 var Hapi = require('hapi');
 var SocketIO = require('socket.io');
 var global_socket;
