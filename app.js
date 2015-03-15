@@ -64,7 +64,7 @@ server.start(function () {
     // doing this wrong.
     global_socket = io;
     io.on('connection', function(socket){
-      console.log('a user connected');
+
     });
 
 
@@ -89,7 +89,6 @@ server.start(function () {
 function tfwsLoop() {
   var json = tfws.gettfwsJSON();
   global_socket.sockets.emit('tfdata', json);
-  console.log('here');
   setTimeout(tfwsLoop, conf.get('interval'));
 
   // var json = tfws.gettfwsJSON();

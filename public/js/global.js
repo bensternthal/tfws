@@ -2,44 +2,50 @@
 
 (function () {
   var socket = io();
-
-  // var mychart = $('#gaugeChart').epoch({
-  //   type: 'time.gauge',
-  //   domain: [0, 500],
-  //   tickSize: 10,
-  //   format: function(v) { return (v*100).toFixed(2) + '%'; }
-  // });
   var timestamp =  ((new Date()).getTime() / 1000)|0;
 
-var lineChartData = [
-  // First series
-  {
-    label: "Series 1",
-    values: [ {time: timestamp, y: 100} ]
-  }
-];
+  var lineChartData = [
+    {
+      label: "Series 1",
+      values: [ {time: timestamp, y: 0} ]
+    }
+  ];
 
-var count = 100;
-
-
-  var lineChart = $('#lineChart').epoch({
+  var humidity = $('#humidity').epoch({
     type: 'time.line',
+    historySize: 50,
+    data: lineChartData,
+    axes: ['left', 'bottom', 'right']
+  });
+
+  var airpress = $('#airpress').epoch({
+    type: 'time.line',
+    historySize: 50,
+    data: lineChartData,
+    axes: ['left', 'bottom', 'right']
+  });
+
+  var temp = $('#temp').epoch({
+    type: 'time.line',
+    historySize: 50,
+    data: lineChartData,
+    axes: ['left', 'bottom', 'right']
+  });
+
+  var illuminance = $('#illuminance').epoch({
+    type: 'time.line',
+    historySize: 50,
     data: lineChartData,
     axes: ['left', 'bottom', 'right']
   });
 
   socket.on('tfdata', function (data) {
     var mytime =  parseInt(((new Date()).getTime() / 1000)|0);
-    var entry = [
-    {
-      time: mytime, y: data.illuminance
-    }
-    ];
 
-    console.log(data.illuminance + " : " + mytime);
-   // mychart.push(data.illuminance);
-    lineChart.push(entry);
-    count + 20;
+    humidity.push([{time: mytime, y: data.humidity}]);
+    airpress.push([{time: mytime, y: data.air_pressure}]);
+    temp.push([{time: mytime, y: data.temperature}]);
+    illuminance.push([{time: mytime, y: data.illuminance}]);
   });
 
 })();
