@@ -46,6 +46,7 @@
     airpress.push([{time: mytime, y: data.air_pressure}]);
     temp.push([{time: mytime, y: data.temperature}]);
     illuminance.push([{time: mytime, y: data.illuminance}]);
+
   });
 
 })();
