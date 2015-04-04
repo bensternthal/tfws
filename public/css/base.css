@@ -13,7 +13,7 @@ h1 {
 h2 {
     font-size: .8em;
     color: yellow;
-    margin-top: 5px;
+    padding-top: 10px;
 }
 
 .chart {
