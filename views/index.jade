@@ -1,16 +1,21 @@
 extend layout
 
 block content
-  h1 Desk Weather
+    h1 Desk Weather
+    div.container
 
-  h2 Illuminance
-  div#illuminance.epoch.chart.category20b
+        div.chart
+            div#temp.epoch.gauge-medium
+            span Temperature
 
-  h2 Humidity
-  div#humidity.epoch.chart.category20c
+        div.chart
+            div#humidity.epoch.gauge-medium
+            span Humidity
 
-  h2 Air Pressure
-  div#airpress.epoch.chart.category20b
+        div.chart
+            div#airpress.epoch.gauge-medium
+            span Air Pressure
 
-  h2 Temperature
-  div#temp.epoch.chart.category20c
+        div.chart
+            div#illuminance.epoch.gauge-medium
+            span Illuminance
