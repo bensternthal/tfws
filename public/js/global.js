@@ -44,10 +44,10 @@
     var $button = $('.temp');
 
     if($button.hasClass('cels')) {
-      $($button).toggleClass('cels').html('Make Fahrenheit');
-      temp.options.format = function(v) { return (Math.round(v.value * 9 / 5 + 32)).toFixed(2) + ' °C'; };
+      $($button).toggleClass('cels').html('°C');
+      temp.options.format = function(v) { return (v * 9 / 5 + 32).toFixed(2) + ' °F'; };
     } else {
-      $($button).toggleClass('cels').html('Make Celsius');
+      $($button).toggleClass('cels').html('°F');
       temp.options.format = function(v) { return (v).toFixed(2) + ' °C'; };
     }
 
