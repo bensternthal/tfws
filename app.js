@@ -2,7 +2,6 @@
 
 var conf = require('./lib/conf');
 var tfws = require('./lib/tfws');
-//var tfdata = require('./lib/tfdata');
 var Hapi = require('hapi');
 var SocketIO = require('socket.io');
 var global_socket;
@@ -77,30 +76,16 @@ server.start(function () {
     // Delay 5 Seconds For Weather Station To Start
     setTimeout(function() {
        tfwsLoop();
-    }
-    , 1000);
-
-    //fdata.getTfData();
-
+    }, 1000);
 });
 
 
 // Update loop
 function tfwsLoop() {
   var json = tfws.gettfwsJSON();
+
   global_socket.sockets.emit('tfdata', json);
   setTimeout(tfwsLoop, conf.get('interval'));
-
-  // var json = tfws.gettfwsJSON();
-
-  // tfdata.saveTfData(json, function(error) {
-  //   if (error) {
-  //     errorHandler(error);
-  //   } else {
-  //     console.log('DB Updated');
-  //     setTimeout(tfwsLoop, conf.get('interval'));
-  //   }
-  // });
 }
 
 /** /Weather Station **/

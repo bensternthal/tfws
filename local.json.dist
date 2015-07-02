@@ -1,11 +1,5 @@
 {
-    "service" : {"xively or local"},
-    "xively": {
-        "url": "",
-        "api_key": ""
-    },
-    "local": {
-        "url": "",
-        "api_key": ""
-    }
+    "domain": "0.0.0.0",
+    "port": 3000,
+    "interval": 1000
 }

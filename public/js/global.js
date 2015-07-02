@@ -1,6 +1,6 @@
-'use strict';
-
 (function () {
+  'use strict';
+
   var socket = io();
 
   var humidity = $('#humidity').epoch({
@@ -54,7 +54,3 @@
   });
 
 })();
-
-
-
-
