@@ -1,7 +1,7 @@
 TFWS: Tinkerforge WeatherStation
 =========
-Node based server for displaying information from the Tinkerforge
-WeatherStation. Uses <http://hapijs.com/> and <http://fastly.github.io/epoch/>
+Node based server for displaying information from the [Tinkerforge
+WeatherStation](https://www.tinkerforge.com/en/shop/kits/starter-kit-weather-station.html). Uses <http://hapijs.com/> and <http://fastly.github.io/epoch/>
 to display some nice dials.
 
 ![tfws](docs/example.png)
